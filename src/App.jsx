@@ -23,7 +23,7 @@ export default function App() {
   const location = useLocation()
   return (
     <LanguageProvider>
-      <div className="min-h-screen bg-base text-gray-200">
+      <div className="min-h-screen bg-appBg text-gray-200">
         {/* ambient neon glow */}
         <div className="pointer-events-none fixed inset-0 overflow-hidden -z-10">
           <div className="absolute -top-32 left-1/2 -translate-x-1/2 h-72 w-72 rounded-full bg-neon/20 blur-[120px]" />

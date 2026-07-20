@@ -4,7 +4,7 @@ export default {
   theme: {
     extend: {
       colors: {
-        base: '#0B0B0B',
+        appBg: '#0B0B0B',
         panel: '#141414',
         neon: '#22C55E',
         neonDim: '#16A34A',

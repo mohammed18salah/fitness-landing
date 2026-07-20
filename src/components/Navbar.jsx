@@ -73,7 +73,7 @@ export default function Navbar({ nav }) {
       </nav>
 
       {/* Mobile bottom nav */}
-      <nav className="no-print fixed inset-x-0 bottom-0 z-40 border-t border-white/10 bg-base/95 backdrop-blur-lg sm:hidden">
+      <nav className="no-print fixed inset-x-0 bottom-0 z-40 border-t border-white/10 bg-appBg/95 backdrop-blur-lg sm:hidden">
         <div className="mx-auto flex max-w-md items-stretch justify-between px-2 py-1.5">
           {nav.map((item) => {
             const Icon = ICONS[item.icon]
