@@ -1,32 +1,35 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: ["./index.html", "./src/**/*.{js,jsx,ts,tsx}"],
+  content: ['./index.html', './src/**/*.{js,jsx}'],
   theme: {
     extend: {
       colors: {
-        ink: "#0B0B0B",
-        panel: "#121212",
-        neon: "#22C55E",
-        neonDim: "#16A34A",
+        base: '#0B0B0B',
+        panel: '#141414',
+        neon: '#22C55E',
+        neonDim: '#16A34A',
       },
       fontFamily: {
-        sans: ["Inter", "system-ui", "sans-serif"],
+        sans: ['Inter', 'system-ui', 'Segoe UI', 'Tahoma', 'sans-serif'],
+        arabic: ['Tajawal', 'system-ui', 'Tahoma', 'sans-serif'],
       },
       boxShadow: {
-        neon: "0 0 20px rgba(34,197,94,0.35), 0 0 60px rgba(34,197,94,0.15)",
-        glass: "0 8px 32px rgba(0,0,0,0.4)",
+        neon: '0 0 16px rgba(34,197,94,0.35)',
+        'neon-sm': '0 0 8px rgba(34,197,94,0.25)',
+      },
+      backdropBlur: {
+        xs: '2px',
       },
       keyframes: {
-        floaty: { "0%,100%": { transform: "translateY(0)" }, "50%": { transform: "translateY(-10px)" } },
-        glow: { "0%,100%": { opacity: "0.6" }, "50%": { opacity: "1" } },
-        fadeup: { "0%": { opacity: "0", transform: "translateY(24px)" }, "100%": { opacity: "1", transform: "translateY(0)" } },
+        pulseNeon: {
+          '0%, 100%': { boxShadow: '0 0 8px rgba(34,197,94,0.4)' },
+          '50%': { boxShadow: '0 0 18px rgba(34,197,94,0.7)' },
+        },
       },
       animation: {
-        floaty: "floaty 5s ease-in-out infinite",
-        glow: "glow 3s ease-in-out infinite",
-        fadeup: "fadeup 0.7s ease-out both",
+        pulseNeon: 'pulseNeon 2.5s ease-in-out infinite',
       },
     },
   },
   plugins: [],
-};
+}
