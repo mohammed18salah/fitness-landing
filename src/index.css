@@ -2,32 +2,88 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  html { scroll-behavior: smooth; }
-  body { @apply bg-ink text-white font-sans antialiased; }
+:root {
+  color-scheme: dark;
+}
+
+html, body, #root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background-color: #0B0B0B;
+  color: #e6e6e6;
+  font-family: 'Inter', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Arabic locale: switch font + text direction */
+html[dir='rtl'] body {
+  font-family: 'Tajawal', system-ui, sans-serif;
 }
 
 @layer components {
   .glass {
-    @apply bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl;
+    @apply bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl;
   }
-  .neon-text { color: #22C55E; text-shadow: 0 0 12px rgba(34,197,94,0.6); }
-  .btn-neon {
-    @apply inline-flex items-center justify-center gap-2 bg-neon text-ink font-semibold
-           px-6 py-3 rounded-full transition-all duration-300 hover:shadow-neon hover:-translate-y-0.5;
+  .glass-strong {
+    @apply bg-white/[0.07] backdrop-blur-lg border border-white/10 rounded-2xl;
   }
-  .btn-ghost {
-    @apply inline-flex items-center justify-center gap-2 border border-white/15 text-white
-           px-6 py-3 rounded-full transition-all duration-300 hover:border-neon hover:text-neon;
+  .neon-text {
+    color: #22C55E;
+    text-shadow: 0 0 10px rgba(34, 197, 94, 0.55);
   }
-  .section-pad { @apply max-w-7xl mx-auto px-5 sm:px-8 py-20 sm:py-28; }
+  .neon-btn {
+    @apply bg-neon/15 border border-neon/40 text-neon rounded-xl px-4 py-2 font-semibold
+           transition hover:bg-neon/25 hover:shadow-neon-sm;
+  }
+  .neon-btn-solid {
+    @apply bg-neon text-black rounded-xl px-4 py-2 font-bold transition
+           hover:bg-neonDim hover:shadow-neon;
+  }
   .chip {
-    @apply text-xs font-medium px-3 py-1 rounded-full bg-neon/10 text-neon border border-neon/20;
+    @apply px-3 py-1 rounded-full text-sm border border-white/10 bg-white/5;
+  }
+  .chip-active {
+    @apply border-neon/60 bg-neon/15 text-neon;
   }
 }
 
-/* custom scrollbar */
-::-webkit-scrollbar { width: 10px; }
+/* Thin neon scrollbar */
+::-webkit-scrollbar { width: 8px; height: 8px; }
 ::-webkit-scrollbar-track { background: #0B0B0B; }
 ::-webkit-scrollbar-thumb { background: #22C55E55; border-radius: 8px; }
-::-webkit-scrollbar-thumb:hover { background: #22C55E; }
+::-webkit-scrollbar-thumb:hover { background: #22C55EAA; }
+
+/* ===================== PRINT ===================== */
+@media print {
+  /* Hide everything by default, only the printable sheet shows */
+  body * { visibility: hidden !important; }
+  #print-sheet, #print-sheet * { visibility: visible !important; }
+
+  #print-sheet {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    padding: 0 12px;
+    background: #fff !important;
+    color: #000 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .no-print { display: none !important; }
+  .print-page { page-break-inside: avoid; }
+
+  #print-sheet img {
+    filter: none !important;
+    background: #f3f3f3 !important;
+  }
+}
+
+@keyframes promoZoom {
+  from { transform: scale(1.04); }
+  to { transform: scale(1); }
+}
