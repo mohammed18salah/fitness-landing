@@ -4,7 +4,7 @@
 // the real exercise image, sets, reps, target muscle and (only when present)
 // weight + notes columns. Columns are dynamic — empty ones are dropped.
 import { jsPDF } from 'jspdf'
-import { getById } from '../data/exercises.js'
+import { getById, hasGif } from '../data/exercises.js'
 
 export async function exportPlanPdf(plan, { t, lang }) {
   const doc = new jsPDF({ unit: 'pt', format: 'a4' })
@@ -162,7 +162,7 @@ export async function exportPlanPdf(plan, { t, lang }) {
       doc.text(String(n), x + 4, y + rowH / 2 + 3)
       x += adjCols[0]
       // exercise (image + name)
-      const imgPath = ex.gif ? `/exercises/${ex.gif}` : ex.image ? `/exercises/${ex.image}` : null
+      const imgPath = hasGif(ex) ? `/exercises/${ex.gif}` : ex.image ? `/exercises/${ex.image}` : null
       let imgRight = x + 36
       if (imgPath) {
         const dataUrl = await loadImageAsDataUrl(imgPath)

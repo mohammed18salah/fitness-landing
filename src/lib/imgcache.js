@@ -4,7 +4,7 @@
 // 2) In-memory LRU for ultra-fast repeat reads within a session.
 // 3) The UI shows a skeleton shimmer while pending and an elegant labeled
 //    placeholder when no real image exists (instead of a broken-image icon).
-import { EXERCISES, BY_ID } from '../data/exercises.js'
+import { EXERCISES, BY_ID, hasGif } from '../data/exercises.js'
 
 const DB_NAME = 'pulse-imgcache'
 const STORE = 'imgs'
@@ -66,9 +66,12 @@ function memSet(url, objUrl) {
 export function localImageFor(exercise) {
   if (!exercise) return []
   const cands = []
-  for (const key of ['gif', 'image']) {
-    const raw = exercise[key]
-    if (!raw) continue
+  if (hasGif(exercise)) {
+    const raw = exercise.gif
+    cands.push(raw.startsWith('/') ? raw : `/exercises/${raw}`)
+  }
+  if (exercise.image) {
+    const raw = exercise.image
     cands.push(raw.startsWith('/') ? raw : `/exercises/${raw}`)
   }
   return cands

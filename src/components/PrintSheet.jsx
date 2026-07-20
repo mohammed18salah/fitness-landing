@@ -1,6 +1,6 @@
 import React from 'react'
 import { useLang } from '../i18n.jsx'
-import { getById } from '../data/exercises.js'
+import { getById, hasGif } from '../data/exercises.js'
 import { IconClose, IconPrint } from './Icons.jsx'
 
 // A print-friendly workout sheet styled like the PULSE GYM log:
@@ -127,7 +127,7 @@ function PrintBody({ plan, lang, t }) {
                 )}
                 {day.exercises.map((ex) => {
                   counter.n += 1
-                  const img = ex.gif ? `/exercises/${ex.gif}` : ex.image ? `/exercises/${ex.image}` : null
+                  const img = hasGif(ex) ? `/exercises/${ex.gif}` : ex.image ? `/exercises/${ex.image}` : null
                   return (
                     <tr key={ex.exId}>
                       <td style={{ ...tdBase, textAlign: 'center', fontWeight: 700 }}>{counter.n}</td>

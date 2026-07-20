@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { useLang } from '../i18n.jsx'
-import { EXERCISES, CATEGORIES } from '../data/exercises.js'
+import { EXERCISES, CATEGORIES, hasGif } from '../data/exercises.js'
 import { loadPlans } from '../store.js'
 import PromoStrip from '../components/PromoStrip.jsx'
 import { IconGenerator, IconLibrary, IconWorkout, IconStar, IconDumbbell } from '../components/Icons.jsx'
@@ -10,7 +10,7 @@ import { IconGenerator, IconLibrary, IconWorkout, IconStar, IconDumbbell } from 
 function cardImage(i) {
   const ex = EXERCISES[(i * 211) % EXERCISES.length]
   if (!ex) return null
-  return ex.gif ? `/exercises/${ex.gif}` : ex.image ? `/exercises/${ex.image}` : null
+  return hasGif(ex) ? `/exercises/${ex.gif}` : ex.image ? `/exercises/${ex.image}` : null
 }
 
 export default function Home() {
