@@ -74,7 +74,9 @@ export default function PromoStrip() {
             <h2 className="text-2xl font-extrabold leading-tight text-white drop-shadow sm:text-3xl">
               {promo.title[lang]}
             </h2>
-            <p className="mt-2 text-sm text-white/90 drop-shadow sm:text-base">{promo.sub[lang]}</p>
+            <p className="mt-2 text-sm drop-shadow sm:text-base" style={{ color: 'rgba(255, 255, 255, 0.9)' }}>
+              {promo.sub[lang]}
+            </p>
           </div>
           <div className="mt-5 flex items-center gap-3">
             <button
