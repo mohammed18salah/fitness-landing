@@ -3,8 +3,8 @@
 // (category icon + name) when no real image is available — never a broken icon.
 // Prefers the animated GIF; falls back to the static JPG automatically.
 import React, { useEffect, useState } from 'react'
-import { localImageFor, loadBestImage } from '../lib/imgcache.js'
-import { IconImageOff } from './Icons.jsx'
+import { loadCachedImage } from '../lib/imgcache.js'
+import { hasGif } from '../data/exercises.js'
 
 function categoryGlyph(category) {
   const c = (category || '').toLowerCase()
@@ -18,35 +18,42 @@ function categoryGlyph(category) {
 }
 
 export default function ExerciseImage({ exercise, className = '', alt }) {
-  const [state, setState] = useState({ status: 'loading', src: null })
-  // Stable string key from the exercise's media refs — avoids re-running the
-  // effect on every render (a fresh array reference would cause an infinite
-  // render loop and freeze the page).
-  const candKey = exercise
-    ? `${(exercise.gif || '')}|${(exercise.image || '')}`
-    : ''
+  const initialUrl = exercise
+    ? (hasGif(exercise) ? `/exercises/${exercise.gif}` : exercise.image ? `/exercises/${exercise.image}` : null)
+    : null
 
+  const [src, setSrc] = useState(initialUrl)
+  const [loaded, setLoaded] = useState(false)
+  const [error, setError] = useState(false)
+
+  // Reset state if the exercise changes
   useEffect(() => {
+    setSrc(initialUrl)
+    setLoaded(false)
+    setError(false)
+  }, [initialUrl])
+
+  // Warm IndexedDB cache in background and resolve to Blob URL if cached/offline
+  useEffect(() => {
+    if (!initialUrl) return
     let alive = true
-    const candidates = localImageFor(exercise)
-    if (!candidates || candidates.length === 0) {
-      setState({ status: 'missing', src: null })
-      return
-    }
-    setState({ status: 'loading', src: null })
-    loadBestImage(candidates)
-      .then((res) => {
-        if (!alive) return
-        if (res) setState({ status: 'ok', src: res.objUrl })
-        else setState({ status: 'missing', src: null })
+
+    loadCachedImage(initialUrl)
+      .then((cachedUrl) => {
+        if (alive && cachedUrl) {
+          setSrc(cachedUrl)
+        }
       })
-      .catch(() => alive && setState({ status: 'missing', src: null }))
+      .catch(() => {
+        // Ignore cache retrieval errors, keep direct server URL
+      })
+
     return () => {
       alive = false
     }
-  }, [candKey, exercise])
+  }, [initialUrl])
 
-  if (state.status === 'missing') {
+  if (!src || error) {
     return (
       <div className={`flex flex-col items-center justify-center gap-1 bg-gradient-to-br from-white/[0.06] to-white/[0.02] text-neon/50 ${className}`}>
         <span className="text-xl leading-none">{categoryGlyph(exercise?.category)}</span>
@@ -57,19 +64,20 @@ export default function ExerciseImage({ exercise, className = '', alt }) {
     )
   }
 
-  if (state.status === 'loading') {
-    return (
-      <div className={`animate-pulse bg-white/5 ${className}`} aria-busy="true" />
-    )
-  }
-
   return (
-    <img
-      src={state.src}
-      alt={alt || (exercise && exercise.name) || 'exercise'}
-      loading="eager"
-      decoding="auto"
-      className={className}
-    />
+    <div className="relative w-full h-full">
+      <img
+        src={src}
+        alt={alt || (exercise && exercise.name) || 'exercise'}
+        loading="lazy"
+        decoding="async"
+        className={`${className} ${loaded ? 'opacity-100' : 'opacity-0'} transition-opacity duration-200`}
+        onLoad={() => setLoaded(true)}
+        onError={() => setError(true)}
+      />
+      {!loaded && (
+        <div className={`absolute inset-0 animate-pulse bg-white/5 ${className}`} aria-busy="true" />
+      )}
+    </div>
   )
 }
